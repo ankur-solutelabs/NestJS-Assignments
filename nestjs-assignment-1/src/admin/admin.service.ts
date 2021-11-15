@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AdTeacherRepository } from './admin.repository';
 import { Teacher } from './admTeacher.entity';
 import { CreateTeacherDto } from './dto/create-teacher.dto';
+import { GetTeacherFilterDto } from './dto/get-teacher-filter.dto';
 @Injectable()
 export class AdminService {
    constructor(
@@ -10,15 +11,21 @@ export class AdminService {
        private adTeacherRepository:AdTeacherRepository,
    ) {}
 
-    getAllTeachers() {
-        // return this.teachers;
+    async getTeachers(filterDto: GetTeacherFilterDto) :Promise<Teacher[]> {
+        return this.adTeacherRepository.getTeachers(filterDto);
+       
     }
 
 
     async getTeacherById(id: number): Promise<Teacher>{
         const found = await this.adTeacherRepository.findOne(id);
 
-        return found
+        if(!found) {
+            throw new NotFoundException( `Teacher with Id "${id}" not found`);
+
+        }
+
+        return found;
 
     }
 
@@ -27,6 +34,7 @@ export class AdminService {
     }
 
     async deleteTeacher(id: number): Promise<void>{
+        const found = this.getTeacherById(id);
         const result = await this.adTeacherRepository.delete(id);
         console.log(result)
 
