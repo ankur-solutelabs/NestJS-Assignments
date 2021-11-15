@@ -18,4 +18,5 @@ export class CreateTeachStudentDto {
 
     @IsNotEmpty()
     inClass : string;
+
 }   

@@ -19,5 +19,4 @@ export class Student extends BaseEntity {
 
     @Column()
     inClass : string;
-
 }

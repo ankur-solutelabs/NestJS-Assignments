@@ -22,7 +22,7 @@ export class TeacherService {
          const found = await this.adStudentRepository.findOne(id);
  
          if(!found) {
-             throw new NotFoundException( `Teacher with Id "${id}" not found`);
+             throw new NotFoundException( `Student with Id "${id}" not found`);
  
          }
  

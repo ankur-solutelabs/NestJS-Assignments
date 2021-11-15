@@ -13,7 +13,6 @@ export class AdStudentRepository extends Repository<Student>{
             query.andWhere('student.inClass = :inClass',{inClass});
 
         }
-
         if(search){
             query.andWhere('student.firstName LIKE :search OR student.lastName LIKE :search',{search: `%${search}%`});
 
@@ -30,7 +29,8 @@ export class AdStudentRepository extends Repository<Student>{
             firstName,
             lastName,
             email, 
-            inClass,} = createStudentDto;
+            inClass,
+            } = createStudentDto;
 
         const student = new Student();
         student.rollNo = rollNo;

@@ -1,14 +1,18 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AdTeacherRepository } from './admin.repository';
+import { AdSchoolRepository, AdTeacherRepository } from './admin.repository';
+import { School } from './admSchool.entity';
 import { Teacher } from './admTeacher.entity';
+import { CreateSchoolDto } from './dto/create-school.dto';
 import { CreateTeacherDto } from './dto/create-teacher.dto';
-import { GetTeacherFilterDto } from './dto/get-teacher-filter.dto';
+import { GetSchoolFilterDto, GetTeacherFilterDto } from './dto/get-teacher-filter.dto';
 @Injectable()
 export class AdminService {
    constructor(
        @InjectRepository(AdTeacherRepository)
        private adTeacherRepository:AdTeacherRepository,
+       @InjectRepository(AdSchoolRepository)
+       private adSchoolRepository:AdSchoolRepository,
    ) {}
 
     async getTeachers(filterDto: GetTeacherFilterDto) :Promise<Teacher[]> {
@@ -47,7 +51,41 @@ export class AdminService {
         return teacher;
     }
 
+ async getSchools(filterSDto: GetSchoolFilterDto) :Promise<School[]> {
+     return this.adSchoolRepository.getSchools(filterSDto);
+    
+ }
+
+
+ async getSchoolById(id: number): Promise<School>{
+     const found = await this.adSchoolRepository.findOne(id);
+
+     if(!found) {
+         throw new NotFoundException( `School with Id "${id}" not found`);
+
+     }
+
+     return found;
+
+ }
+
+ async createSchool(createSchoolDto: CreateSchoolDto):Promise<School>{
+     return this.adSchoolRepository.createSchool(createSchoolDto);
+ }
+
+ async deleteSchool(id: number): Promise<void>{
+     const found = this.getSchoolById(id);
+     const result = await this.adSchoolRepository.delete(id);
+     console.log(result)
+
+ }
+
+ async updateSchool(id: number,contactNo: number):Promise<School>{
+     const school = await this.getSchoolById(id);
+     school.contactNo = contactNo;
+     await school.save();
+     return school;
+ }
  
  
 }
-//going to add validation

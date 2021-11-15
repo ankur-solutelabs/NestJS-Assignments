@@ -9,3 +9,13 @@ export class GetTeacherFilterDto {
     search : string;
 
 }
+
+export class GetSchoolFilterDto {
+    @IsOptional()
+    schoolCode : string;
+
+    @IsOptional()
+    @IsNotEmpty()
+    search : string;
+
+}
