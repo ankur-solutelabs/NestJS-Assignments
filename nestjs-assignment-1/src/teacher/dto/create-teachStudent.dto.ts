@@ -1,8 +1,11 @@
 import { IsNotEmpty } from "class-validator";
 
-export class CreateTeacherDto {
+export class CreateTeachStudentDto {
 
     id : number;
+
+    @IsNotEmpty()
+    rollNo : number;
 
     @IsNotEmpty()
     firstName : string;
@@ -14,5 +17,5 @@ export class CreateTeacherDto {
     email : string;
 
     @IsNotEmpty()
-    classList : string;
+    inClass : string;
 }   

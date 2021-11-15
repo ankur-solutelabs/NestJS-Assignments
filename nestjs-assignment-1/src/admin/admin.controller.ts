@@ -10,12 +10,12 @@ import { TeacherValidationPipe } from './pipes/teacher-detail-validation.pipe';
 export class AdminController {
     constructor (private adminService: AdminService ) {}
 
-    @Get()
+    @Get('allteacher')
     getTeachers(@Query(ValidationPipe) filterDto : GetTeacherFilterDto) : Promise<Teacher[]> {
         return this.adminService.getTeachers(filterDto);
     }
 
-    @Post()
+    @Post('teacher')
     @UsePipes(ValidationPipe)
 
     createTeacher(@Body() createTeacherDto: CreateTeacherDto): Promise<Teacher> {
@@ -24,16 +24,16 @@ export class AdminController {
 
     }
 
-    @Get('/:id')
+    @Get('teacher/:id')
     getTeacherById(@Param('id',ParseIntPipe) id: number): Promise<Teacher> {
         return this.adminService.getTeacherById(id);
     }
-    @Delete('/:id')
+    @Delete('teacher/:id')
     deleteTeacher(@Param('id', ParseIntPipe)id: number): Promise<void>{
         return this.adminService.deleteTeacher(id);
     }
 
-    @Patch('/:id')
+    @Patch('teacher/:id')
     updateTeacherClass(
         @Param('id',ParseIntPipe) id: number,
         @Body('classList', TeacherValidationPipe) classList: string,
