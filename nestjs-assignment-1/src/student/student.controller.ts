@@ -1,9 +1,12 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Patch } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Patch, UseGuards } from '@nestjs/common';
+import {AuthGuard} from '@nestjs/passport';
 import { StudentValidationPipe } from 'src/teacher/pipes/student-details-validation.pipe';
 import { Student } from 'src/teacher/teachStudent.entity';
 import { StudentService } from './student.service';
 
+
 @Controller('student')
+@UseGuards(AuthGuard())
 export class SelfController {
     constructor (private studentService: StudentService ) {}
 

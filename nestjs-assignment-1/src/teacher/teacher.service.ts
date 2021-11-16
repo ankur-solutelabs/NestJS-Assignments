@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/auth/user.entity';
 import { CreateTeachStudentDto } from './dto/create-teachStudent.dto';
 import { GetStudentFilterDto } from './dto/get-student-filter.dto';
 import { AdStudentRepository } from './teachStd.repository';
@@ -12,8 +13,11 @@ export class TeacherService {
         private adStudentRepository:AdStudentRepository,
     ) {}
  
-     async getStudents(filterDto: GetStudentFilterDto) :Promise<Student[]> {
-         return this.adStudentRepository.getStudents(filterDto);
+     async getStudents(
+         filterDto: GetStudentFilterDto,
+         user:User
+         ) :Promise<Student[]> {
+         return this.adStudentRepository.getStudents(filterDto,user);
         
      }
  
@@ -30,8 +34,11 @@ export class TeacherService {
  
      }
  
-     async createStudent(createStudentDto:CreateTeachStudentDto):Promise<Student>{
-         return this.adStudentRepository.createStudent(createStudentDto);
+     async createStudent(
+         createStudentDto:CreateTeachStudentDto,
+         user:User
+         ):Promise<Student>{
+         return this.adStudentRepository.createStudent(createStudentDto,user);
      }
  
      async deleteStudent(id: number): Promise<void>{

@@ -15,4 +15,5 @@ export class CreateSchoolDto {
 
     @IsNotEmpty()
     contactNo : number;
+
 } 

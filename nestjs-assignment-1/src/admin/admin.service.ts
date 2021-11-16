@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/auth/user.entity';
 import { AdSchoolRepository, AdTeacherRepository } from './admin.repository';
 import { School } from './admSchool.entity';
 import { Teacher } from './admTeacher.entity';
@@ -15,8 +16,11 @@ export class AdminService {
        private adSchoolRepository:AdSchoolRepository,
    ) {}
 
-    async getTeachers(filterDto: GetTeacherFilterDto) :Promise<Teacher[]> {
-        return this.adTeacherRepository.getTeachers(filterDto);
+    async getTeachers(
+        filterDto: GetTeacherFilterDto,
+        user:User
+        ) :Promise<Teacher[]> {
+        return this.adTeacherRepository.getTeachers(filterDto,user);
        
     }
 
@@ -33,8 +37,11 @@ export class AdminService {
 
     }
 
-    async createTeacher(createTeacherDto:CreateTeacherDto):Promise<Teacher>{
-        return this.adTeacherRepository.createTeacher(createTeacherDto);
+    async createTeacher(
+        createTeacherDto:CreateTeacherDto,
+        user:User
+        ):Promise<Teacher>{
+        return this.adTeacherRepository.createTeacher(createTeacherDto,user);
     }
 
     async deleteTeacher(id: number): Promise<void>{
@@ -51,8 +58,11 @@ export class AdminService {
         return teacher;
     }
 
- async getSchools(filterSDto: GetSchoolFilterDto) :Promise<School[]> {
-     return this.adSchoolRepository.getSchools(filterSDto);
+ async getSchools(
+     filterSDto: GetSchoolFilterDto,
+     user:User,
+     ) :Promise<School[]> {
+     return this.adSchoolRepository.getSchools(filterSDto,user);
     
  }
 
@@ -69,8 +79,12 @@ export class AdminService {
 
  }
 
- async createSchool(createSchoolDto: CreateSchoolDto):Promise<School>{
-     return this.adSchoolRepository.createSchool(createSchoolDto);
+ async createSchool(
+     createSchoolDto: CreateSchoolDto,
+      user:User
+     
+     ):Promise<School>{
+     return this.adSchoolRepository.createSchool(createSchoolDto,user);
  }
 
  async deleteSchool(id: number): Promise<void>{

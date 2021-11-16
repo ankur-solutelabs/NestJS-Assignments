@@ -1,27 +1,37 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AdminService } from './admin.service';
+import {AuthGuard} from '@nestjs/passport';
 import { School } from './admSchool.entity';
 import { Teacher } from './admTeacher.entity';
 import { CreateSchoolDto } from './dto/create-school.dto';
 import { CreateTeacherDto } from './dto/create-teacher.dto';
 import { GetSchoolFilterDto, GetTeacherFilterDto } from './dto/get-teacher-filter.dto';
 import { TeacherValidationPipe } from './pipes/teacher-detail-validation.pipe';
+import { User } from 'src/auth/user.entity';
+import { GetUser } from 'src/auth/get-user.decorator';
 
 @Controller('admin')
+@UseGuards(AuthGuard())
 export class AdminController {
     constructor (private adminService: AdminService ) {}
 
     @Get('allteacher')
-    getTeachers(@Query(ValidationPipe) filterDto : GetTeacherFilterDto) : Promise<Teacher[]> {
-        return this.adminService.getTeachers(filterDto);
+    getTeachers(
+        @Query(ValidationPipe) filterDto : GetTeacherFilterDto,
+        @GetUser() user:User,
+        ) : Promise<Teacher[]> {
+        return this.adminService.getTeachers(filterDto,user);
     }
 
     @Post('teacher')
     @UsePipes(ValidationPipe)
 
-    createTeacher(@Body() createTeacherDto: CreateTeacherDto): Promise<Teacher> {
+    createTeacher(
+        @Body() createTeacherDto: CreateTeacherDto,
+         @GetUser()user: User,
+        ): Promise<Teacher> {
 
-       return this.adminService.createTeacher(createTeacherDto)
+       return this.adminService.createTeacher(createTeacherDto,user)
 
     }
 
@@ -46,16 +56,23 @@ export class AdminController {
 
 
     @Get('allschool')
-    getSchools(@Query(ValidationPipe) filterSDto : GetSchoolFilterDto) : Promise<School[]> {
-        return this.adminService.getSchools(filterSDto);
+    getSchools(
+        @Query(ValidationPipe) filterSDto : GetSchoolFilterDto,
+        @GetUser() user:User,
+        ) : Promise<School[]> {
+        return this.adminService.getSchools(filterSDto,user);
     }
 
     @Post('school')
     @UsePipes(ValidationPipe)
 
-    createSchool(@Body() createSchoolDto: CreateSchoolDto): Promise<School> {
+    createSchool(
+        @Body() createSchoolDto: CreateSchoolDto,
+        @GetUser()user: User,
+        
+        ): Promise<School> {
 
-       return this.adminService.createSchool(createSchoolDto)
+       return this.adminService.createSchool(createSchoolDto,user)
 
     }
 

@@ -1,3 +1,4 @@
+import { User } from "src/auth/user.entity";
 import { EntityRepository, Repository } from "typeorm";
 import { School } from "./admSchool.entity";
 import { Teacher } from "./admTeacher.entity";
@@ -7,11 +8,16 @@ import { GetSchoolFilterDto, GetTeacherFilterDto } from "./dto/get-teacher-filte
 
 @EntityRepository(Teacher)
 export class AdTeacherRepository extends Repository<Teacher>{
-    async getTeachers(filterDto:GetTeacherFilterDto): Promise<Teacher[]>{
+    async getTeachers(
+        filterDto:GetTeacherFilterDto,
+        user:User
+        ): Promise<Teacher[]>{
         const {email,search} = filterDto;
         const query = this.createQueryBuilder('teacher');
 
-        if(email){
+        // query.where('teacher.userId = :userId', {userId: user.id})
+
+        if(email){ 
             query.andWhere('teacher.email = :email',{email});
 
         }
@@ -26,7 +32,10 @@ export class AdTeacherRepository extends Repository<Teacher>{
     }
 
 
-    async createTeacher(createTeacherDto: CreateTeacherDto):Promise<Teacher>{
+    async createTeacher(
+        createTeacherDto: CreateTeacherDto,
+        user:User,
+        ):Promise<Teacher>{
         const {firstName,
             lastName,
             email, 
@@ -37,6 +46,7 @@ export class AdTeacherRepository extends Repository<Teacher>{
         teacher.lastName = lastName;
         teacher.email = email;
         teacher.classList = classList;
+        teacher.user = user;
         await teacher.save();
 
         return teacher;
@@ -47,9 +57,14 @@ export class AdTeacherRepository extends Repository<Teacher>{
 
 @EntityRepository(School)
 export class AdSchoolRepository extends Repository<School>{
-    async getSchools(filterSDto:GetSchoolFilterDto): Promise<School[]>{
+    async getSchools(
+        filterSDto:GetSchoolFilterDto,
+        user:User
+        ): Promise<School[]>{
         const {schoolCode,search} = filterSDto;
         const query = this.createQueryBuilder('school');
+
+        // query.where('school.userId = :userId', {userId: user.id})
 
         if(schoolCode){
             query.andWhere('school.schoolCode = :schoolCode',{schoolCode});
@@ -66,7 +81,10 @@ export class AdSchoolRepository extends Repository<School>{
     }
 
 
-    async createSchool(createSchoolDto: CreateSchoolDto):Promise<School>{
+    async createSchool(
+        createSchoolDto: CreateSchoolDto,
+        user:User,
+        ):Promise<School>{
         const {
             schoolName,
             schoolCode,
@@ -78,6 +96,7 @@ export class AdSchoolRepository extends Repository<School>{
         school.schoolCode = schoolCode;
         school.schoolAddress = schoolAddress;
         school.contactNo = contactNo;
+        school.user = user;
         await school.save();
 
         return school;

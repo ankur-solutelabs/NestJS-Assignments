@@ -1,3 +1,4 @@
+import { User } from "src/auth/user.entity";
 import { EntityRepository, Repository } from "typeorm";
 import { CreateTeachStudentDto } from "./dto/create-teachStudent.dto";
 import { GetStudentFilterDto } from "./dto/get-student-filter.dto";
@@ -5,9 +6,14 @@ import { Student } from "./teachStudent.entity";
 
 @EntityRepository(Student)
 export class AdStudentRepository extends Repository<Student>{
-    async getStudents(filterDto:GetStudentFilterDto): Promise<Student[]>{
+    async getStudents(
+        filterDto:GetStudentFilterDto,
+        user:User,
+        ): Promise<Student[]>{
         const {inClass,search} = filterDto;
         const query = this.createQueryBuilder('student');
+
+        // query.where('student.userId = :userId', {userId:user.id})
 
         if(inClass){
             query.andWhere('student.inClass = :inClass',{inClass});
@@ -23,7 +29,10 @@ export class AdStudentRepository extends Repository<Student>{
     }
 
 
-    async createStudent(createStudentDto: CreateTeachStudentDto):Promise<Student>{
+    async createStudent(
+        createStudentDto: CreateTeachStudentDto,
+        user:User
+        ):Promise<Student>{
         const {
             rollNo,
             firstName,
@@ -38,6 +47,7 @@ export class AdStudentRepository extends Repository<Student>{
         student.lastName = lastName;
         student.email = email;
         student.inClass = inClass;
+        student.user = user
         await student.save();
 
         return student;

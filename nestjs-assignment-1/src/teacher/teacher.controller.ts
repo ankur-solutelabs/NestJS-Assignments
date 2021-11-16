@@ -1,26 +1,37 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CreateTeachStudentDto } from './dto/create-teachStudent.dto';
 import { GetStudentFilterDto } from './dto/get-student-filter.dto';
 import { StudentValidationPipe } from './pipes/student-details-validation.pipe';
 import { TeacherService } from './teacher.service';
 import { Student } from './teachStudent.entity';
+import {AuthGuard} from '@nestjs/passport';
+import { GetUser } from 'src/auth/get-user.decorator';
+import { User } from 'src/auth/user.entity';
 
 @Controller('teacher')
+@UseGuards(AuthGuard())
 export class StudentController {
     constructor (private teacherService: TeacherService ) {}
 
     @Get('allstudent')
-    getStudents(@Query(ValidationPipe) filterDto : GetStudentFilterDto) : Promise<Student[]> {
-        return this.teacherService.getStudents(filterDto);
+    getStudents(
+        @Query(ValidationPipe) filterDto : GetStudentFilterDto,
+        @GetUser() user:User
+        ) : Promise<Student[]> {
+        return this.teacherService.getStudents(filterDto,user);
     }
 
     @Post('student')
 
     @UsePipes(ValidationPipe)
 
-    createStudent(@Body() createStudentDto: CreateTeachStudentDto): Promise<Student> {
+    createStudent(
+        @Body() createStudentDto: CreateTeachStudentDto,
+        @GetUser() user: User,
+        
+        ): Promise<Student> {
 
-       return this.teacherService.createStudent(createStudentDto)
+       return this.teacherService.createStudent(createStudentDto,user)
 
     }
 
