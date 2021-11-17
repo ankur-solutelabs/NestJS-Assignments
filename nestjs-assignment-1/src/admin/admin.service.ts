@@ -25,8 +25,13 @@ export class AdminService {
     }
 
 
-    async getTeacherById(id: number): Promise<Teacher>{
-        const found = await this.adTeacherRepository.findOne(id);
+    async getTeacherById(
+        id: number,
+        user:User
+        ): Promise<Teacher>{
+        const found = await this.adTeacherRepository.findOne({where: {id, 
+            //userId: user.id 
+        }});
 
         if(!found) {
             throw new NotFoundException( `Teacher with Id "${id}" not found`);
@@ -44,15 +49,26 @@ export class AdminService {
         return this.adTeacherRepository.createTeacher(createTeacherDto,user);
     }
 
-    async deleteTeacher(id: number): Promise<void>{
-        const found = this.getTeacherById(id);
-        const result = await this.adTeacherRepository.delete(id);
+    async deleteTeacher(id: number,
+        user:User
+        
+        ): Promise<void>{
+        const found = this.getTeacherById(id,user);
+        const result = await this.adTeacherRepository.delete({ id, 
+            // userId: user.id
+        
+        });
         console.log(result)
 
     }
  
-    async updateTeacherClass(id: number,classList: string):Promise<Teacher>{
-        const teacher = await this.getTeacherById(id);
+    async updateTeacherClass(
+        id: number,
+        classList: string,
+        user:User,
+        
+        ):Promise<Teacher>{
+        const teacher = await this.getTeacherById(id,user);
         teacher.classList = classList;
         await teacher.save();
         return teacher;
@@ -67,8 +83,14 @@ export class AdminService {
  }
 
 
- async getSchoolById(id: number): Promise<School>{
-     const found = await this.adSchoolRepository.findOne(id);
+ async getSchoolById(
+     id: number,
+     user:User,
+     ): Promise<School>{
+     const found = await this.adSchoolRepository.findOne({where: {id,
+        // userId: user.id
+    
+    }});
 
      if(!found) {
          throw new NotFoundException( `School with Id "${id}" not found`);
@@ -87,15 +109,24 @@ export class AdminService {
      return this.adSchoolRepository.createSchool(createSchoolDto,user);
  }
 
- async deleteSchool(id: number): Promise<void>{
-     const found = this.getSchoolById(id);
-     const result = await this.adSchoolRepository.delete(id);
+ async deleteSchool(id: number,
+    user:User,
+    
+    ): Promise<void>{
+     const found = this.getSchoolById(id,user);
+     const result = await this.adSchoolRepository.delete({id,
+        // userId: user.id,
+    
+    });
      console.log(result)
 
  }
 
- async updateSchool(id: number,contactNo: number):Promise<School>{
-     const school = await this.getSchoolById(id);
+ async updateSchool(
+     id: number,contactNo: number,
+     user:User
+     ):Promise<School>{
+     const school = await this.getSchoolById(id,user);
      school.contactNo = contactNo;
      await school.save();
      return school;

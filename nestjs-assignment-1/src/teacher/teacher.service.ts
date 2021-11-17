@@ -22,8 +22,14 @@ export class TeacherService {
      }
  
  
-     async getStudentById(id: number): Promise<Student>{
-         const found = await this.adStudentRepository.findOne(id);
+     async getStudentById(id: number,
+        user:User,
+        
+        ): Promise<Student>{
+         const found = await this.adStudentRepository.findOne({where: {id,
+            // userId: user.id,
+        
+        }});
  
          if(!found) {
              throw new NotFoundException( `Student with Id "${id}" not found`);
@@ -41,15 +47,25 @@ export class TeacherService {
          return this.adStudentRepository.createStudent(createStudentDto,user);
      }
  
-     async deleteStudent(id: number): Promise<void>{
-         const found = this.getStudentById(id);
-         const result = await this.adStudentRepository.delete(id);
+     async deleteStudent(id: number,
+        user:User
+        
+        ): Promise<void>{
+         const found = this.getStudentById(id,user);
+         const result = await this.adStudentRepository.delete({id,
+            // userId: user.id,
+        
+        });
          console.log(result)
  
      }
   
-     async updateStudentClass(id: number,inClass: string):Promise<Student>{
-         const student = await this.getStudentById(id);
+     async updateStudentClass(
+         id: number,inClass: string,
+         user:User,
+         
+         ):Promise<Student>{
+         const student = await this.getStudentById(id,user);
          student.inClass = inClass;
          await student.save();
          return student;

@@ -36,20 +36,28 @@ export class AdminController {
     }
 
     @Get('teacher/:id')
-    getTeacherById(@Param('id',ParseIntPipe) id: number): Promise<Teacher> {
-        return this.adminService.getTeacherById(id);
+    getTeacherById(
+        @Param('id',ParseIntPipe) id: number,
+        @GetUser() user: User,
+        ): Promise<Teacher> {
+        return this.adminService.getTeacherById(id,user);
     }
     @Delete('teacher/:id')
-    deleteTeacher(@Param('id', ParseIntPipe)id: number): Promise<void>{
-        return this.adminService.deleteTeacher(id);
+    deleteTeacher(
+        @Param('id', ParseIntPipe)id: number,
+        @GetUser() user:User,
+        
+        ): Promise<void>{
+        return this.adminService.deleteTeacher(id,user);
     }
 
     @Patch('teacher/:id')
     updateTeacherClass(
         @Param('id',ParseIntPipe) id: number,
         @Body('classList', TeacherValidationPipe) classList: string,
+        @GetUser() user:User
     ): Promise<Teacher> {
-        return this.adminService.updateTeacherClass(id,classList);
+        return this.adminService.updateTeacherClass(id,classList,user);
     }
 
 
@@ -77,20 +85,26 @@ export class AdminController {
     }
 
     @Get('school/:id')
-    getSchoolById(@Param('id',ParseIntPipe) id: number): Promise<School> {
-        return this.adminService.getSchoolById(id);
+    getSchoolById(
+        @Param('id',ParseIntPipe) id: number,
+        @GetUser() user:User,
+        ): Promise<School> {
+        return this.adminService.getSchoolById(id,user);
     }
     @Delete('school/:id')
-    deleteSchool(@Param('id', ParseIntPipe)id: number): Promise<void>{
-        return this.adminService.deleteSchool(id);
+    deleteSchool(@Param('id', ParseIntPipe)id: number,
+    @GetUser() user:User
+    ): Promise<void>{
+        return this.adminService.deleteSchool(id,user);
     }
 
     @Patch('school/:id')
     updateSchoolClass(
         @Param('id',ParseIntPipe) id: number,
         @Body('contactNo', TeacherValidationPipe) contactNo: number,
+        @GetUser() user:User,
     ): Promise<School> {
-        return this.adminService.updateSchool(id,contactNo);
+        return this.adminService.updateSchool(id,contactNo,user);
     }
 }
  

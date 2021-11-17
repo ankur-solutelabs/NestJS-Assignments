@@ -36,20 +36,29 @@ export class StudentController {
     }
 
     @Get('student/:id')
-    getStudentById(@Param('id',ParseIntPipe) id: number): Promise<Student> {
-        return this.teacherService.getStudentById(id);
+    getStudentById(@Param('id',ParseIntPipe) id: number,
+    @GetUser() user:User,
+    
+    ): Promise<Student> {
+        return this.teacherService.getStudentById(id,user);
     }
     @Delete('student/:id')
-    deleteStudent(@Param('id', ParseIntPipe)id: number): Promise<void>{
-        return this.teacherService.deleteStudent(id);
+    deleteStudent(
+        
+        @Param('id', ParseIntPipe)id: number,
+        @GetUser() user:User,
+        
+        ): Promise<void>{
+        return this.teacherService.deleteStudent(id,user);
     }
 
     @Patch('student/:id')
     updateStudentClass(
         @Param('id',ParseIntPipe) id: number,
         @Body('inClass', StudentValidationPipe) inClass: string,
+        @GetUser() user:User,
     ): Promise<Student> {
-        return this.teacherService.updateStudentClass(id,inClass);
+        return this.teacherService.updateStudentClass(id,inClass,user);
     }
 }
 
